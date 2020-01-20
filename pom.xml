@@ -28,7 +28,7 @@
     <version>8.4-10</version>
   </parent>
   <artifactId>application-reference-displayer</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>Reference Displayer Application - Parent POM</name>
   <packaging>pom</packaging>
   <description>Provide a set of tools to show the references of a document in different places of the UI.</description>
@@ -36,7 +36,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/application-reference-displayer.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/application-reference-displayer.git</developerConnection>
     <url>https://github.com/xwiki-contrib/application-reference-displayer/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>application-reference-displayer-1.1</tag>
   </scm>
   <developers>
     <developer>
