@@ -31,8 +31,8 @@
   <parent>ReferenceDisplayer.Code.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1532682924000</date>
-  <contentUpdateDate>1532681143000</contentUpdateDate>
+  <date>1579515840000</date>
+  <contentUpdateDate>1579513884000</contentUpdateDate>
   <version>1.1</version>
   <title>ReferenceDisplayerJSX</title>
   <comment/>
@@ -56,6 +56,7 @@
       <validationScript/>
       <cache>
         <cache>0</cache>
+        <defaultValue>long</defaultValue>
         <disabled>0</disabled>
         <displayType>select</displayType>
         <multiSelect>0</multiSelect>
@@ -122,24 +123,45 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>require(['jquery', 'xwiki-meta'], function($, xm) {&#xd;
-  "use strict";&#xd;
-&#xd;
-  // Note that the require['xwiki-meta'] (meta information about the current document) is not available on&#xd;
-  // XWiki versions &lt; 6.3, then we get these meta information directly from the DOM.&#xd;
-  var document = xm ? xm.document : $('meta[name="document"]').attr('content');&#xd;
-&#xd;
-  var absoluteDocumentReferenceLabel = "$services.localization.render('referencedisplayer.label.absoluteDocumentReference')";&#xd;
-&#xd;
-  $(function() {&#xd;
-    var leftInformationPanel = $("#informationleft");&#xd;
-&#xd;
-    var documentReferenceDisplayer = $('&lt;dl/>')&#xd;
-    documentReferenceDisplayer.append($('&lt;dt/>').text(absoluteDocumentReferenceLabel));&#xd;
-    documentReferenceDisplayer.append($('&lt;dd/>').append($('&lt;span/>').addClass('monospace').text(document)));&#xd;
-&#xd;
-    leftInformationPanel.append(documentReferenceDisplayer);&#xd;
-  });&#xd;
+      <code>require(['jquery', 'xwiki-meta'], function($, xm) {
+  "use strict";
+
+  // Note that the require['xwiki-meta'] (meta information about the current document) is not available on
+  // XWiki versions &lt; 6.3, then we get these meta information directly from the DOM.
+  var currentDoc = xm ? xm.document : $('meta[name="document"]').attr('content');
+  var currentWiki = xm ? xm.wiki : $('meta[name="wiki"]').attr('content');
+
+  var absoluteDocumentReferenceLabel = "$services.localization.render('referencedisplayer.label.absoluteDocumentReference')";
+  var absoluteDocumentReferenceId = "absoluteDocumentReference";
+
+  const updateInformationPanel = (function() {
+    var leftInformationPanel = $("#informationleft");
+
+    // Add the document reference only if it's not already there.
+    if (leftInformationPanel.find("#" + absoluteDocumentReferenceId).length == 0) {
+      var documentReferenceDisplayer = $('&lt;dl/&gt;').add('id', absoluteDocumentReferenceId);
+      documentReferenceDisplayer.append($('&lt;dt/&gt;').text(absoluteDocumentReferenceLabel));
+      documentReferenceDisplayer.append($('&lt;dd/&gt;').append($('&lt;span/&gt;').addClass('monospace').text(currentWiki + ":" + currentDoc)));
+
+      leftInformationPanel.append(documentReferenceDisplayer);
+    }
+  });
+
+  $(function() {
+    updateInformationPanel();
+
+    // Listen for changes in the information panel.
+    const informationPanel = document.getElementById('Informationpane');
+    const config = { childList : true, subtree : true };
+    const observer = new MutationObserver(function(mutationsList, observer) {
+      if (document.getElementById('informationleft') != null) {
+        observer.disconnect();
+        updateInformationPanel();
+        observer.observe(informationPanel, config);
+      }
+    });
+    observer.observe(informationPanel, config);
+  });
 });</code>
     </property>
     <property>
