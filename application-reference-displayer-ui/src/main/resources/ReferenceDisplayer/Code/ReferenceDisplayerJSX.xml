@@ -148,19 +148,22 @@
   });
 
   $(function() {
-    updateInformationPanel();
-
-    // Listen for changes in the information panel.
     const informationPanel = document.getElementById('Informationpane');
-    const config = { childList : true, subtree : true };
-    const observer = new MutationObserver(function(mutationsList, observer) {
-      if (document.getElementById('informationleft') != null) {
-        observer.disconnect();
-        updateInformationPanel();
-        observer.observe(informationPanel, config);
-      }
-    });
-    observer.observe(informationPanel, config);
+
+    if(typeof(informationPanel) != 'undefined' &amp;&amp; informationPanel != null){
+      updateInformationPanel();
+
+      // Listen for changes in the information panel.
+      const config = { childList : true, subtree : true };
+      const observer = new MutationObserver(function(mutationsList, observer) {
+        if (document.getElementById('informationleft') != null) {
+          observer.disconnect();
+          updateInformationPanel();
+          observer.observe(informationPanel, config);
+        }
+      });
+      observer.observe(informationPanel, config);
+    }
   });
 });</code>
     </property>
